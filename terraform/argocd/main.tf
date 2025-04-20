@@ -17,5 +17,5 @@ resource "helm_release" "argocd" {
   timeout          = 600         # Wait time for deployment
 
   # Optional: Use your existing values file
-  # values = [ file("argocd-values.yaml") ]
+  values = [ file("argocd-values.yaml") ]
 }
