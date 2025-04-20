@@ -36,6 +36,16 @@ jobs:
         working-directory: terraform/argocd
         run: terraform init
 
+      - name: Auto-import Argo CD Helm release if not in state
+        working-directory: terraform/argocd
+        run: |
+          if terraform state list | grep -q "helm_release.argocd"; then
+            echo "✅ Argo CD already imported. Skipping import."
+          else
+            echo "🔄 Importing Argo CD Helm release into state..."
+            terraform import helm_release.argocd argocd/argocd
+          fi
+
       - name: Terraform Apply
         working-directory: terraform/argocd
         run: terraform apply -auto-approve
