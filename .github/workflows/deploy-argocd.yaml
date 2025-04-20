@@ -1,0 +1,41 @@
+name: Deploy Argo CD to AKS
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'terraform/argocd/**'
+
+jobs:
+  deploy-argocd:
+    name: Deploy Argo CD to AKS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Set up AKS Kubeconfig
+        run: |
+          az aks get-credentials \
+            --resource-group <your-resource-group> \
+            --name <your-aks-cluster-name> \
+            --overwrite-existing
+
+      - name: Terraform Init
+        working-directory: terraform/argocd
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: terraform/argocd
+        run: terraform apply -auto-approve
