@@ -49,3 +49,19 @@ jobs:
       - name: Terraform Apply
         working-directory: terraform/argocd
         run: terraform apply -auto-approve
+
+      - name: Output Argo CD access info
+        run: |
+          echo "🌐 Fetching Argo CD external IP..."
+          EXTERNAL_IP=$(kubectl -n argocd get svc argocd-server -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+          echo "✅ Argo CD UI: https://$EXTERNAL_IP"
+
+          echo "🔐 Fetching initial admin password..."
+          PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
+
+          echo "🧾 Argo CD Login Info:"
+          echo "---------------------------"
+          echo "URL      : https://$EXTERNAL_IP"
+          echo "Username : admin"
+          echo "Password : $PASSWORD"
+          echo "---------------------------"
