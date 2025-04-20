@@ -1,6 +1,6 @@
 server:
   service:
-    type: NodePort  # You can change to NodePort if preferred
+    type: NodePort  # You can change to NodePort if preferred 
     port: 80
   ingress:
     enabled: false
