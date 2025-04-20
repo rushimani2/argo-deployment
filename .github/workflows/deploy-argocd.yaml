@@ -28,8 +28,8 @@ jobs:
       - name: Set up AKS Kubeconfig
         run: |
           az aks get-credentials \
-            --resource-group <your-resource-group> \
-            --name <your-aks-cluster-name> \
+            --resource-group github-workflow \
+            --name first-cluster \
             --overwrite-existing
 
       - name: Terraform Init
